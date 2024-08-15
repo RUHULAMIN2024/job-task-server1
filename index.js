@@ -29,21 +29,53 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
 
-app.get('/products', async(req, res) => {
-    try {
-        const products = await productsCollection.find().toArray();
-        res.json({
-            success: true,
-            data: products
+
+        // get product
+        app.get('/products', async (req, res) => {
+
+            try {
+                const page = parseInt(req.query.page);
+                const size = parseInt(req.query.size);
+                const result = await productsCollection.find()
+                    .skip(size * (page - 1))
+                    .limit(size)
+                    .toArray();
+                res.json({
+                    success: true,
+                    data: result
+                })
+            } catch (err) {
+                res.json({
+                    success: false,
+                    error: err.message
+                })
+            }
+        })
+
+
+        app.get("/count", async (req, res) => {
+            const count = await productsCollection.estimatedDocumentCount()
+            res.send({ count });
+        })
+
+
+        // Search products by name
+        app.get('/search', async (req, res) => {
+            try {
+                const keyword = req.query.keyword || '';
+                const products = await productsCollection.find({ name: { $regex: keyword, $options: 'i' } });
+                res.json({
+                    success: true,
+                    data: products
+                });
+            } catch (err) {
+                res.json({
+                    success: false,
+                    error: err.message
+                });
+            }
         });
-    } catch (error) {
-        res.json({
-            success: false,
-            error: error.message
-        });
-    }
-})
-    
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
