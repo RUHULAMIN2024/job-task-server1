@@ -36,13 +36,25 @@ async function run() {
             try {
                 const page = parseInt(req.query.page);
                 const size = parseInt(req.query.size);
-                const result = await productsCollection.find()
+                const {category, brand, minPrice, maxPrice} = JSON.parse(req.query.filter);
+
+                const search = req.query.search || '';
+
+
+
+                const result = await productsCollection.find({ name: { $regex: search, $options: 'i' } })
                     .skip(size * (page - 1))
                     .limit(size)
                     .toArray();
+
+
+
+                    const count = await productsCollection.estimatedDocumentCount()
+
                 res.json({
                     success: true,
-                    data: result
+                    data: result,
+                    count: count
                 })
             } catch (err) {
                 res.json({
@@ -53,11 +65,7 @@ async function run() {
         })
 
 
-        app.get("/count", async (req, res) => {
-            const count = await productsCollection.estimatedDocumentCount()
-            res.send({ count });
-        })
-
+      
 
         // Search products by name
         app.get('/search', async (req, res) => {
