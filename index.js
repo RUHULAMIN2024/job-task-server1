@@ -103,6 +103,25 @@ app.get("/filter", async (req, res) => {
 });
 
 
+// Sort products
+app.get('/sort', async (req, res) => {
+    try {
+        const sortField = req.query.sortField || 'createdAt';
+        const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+
+        const products = await productsCollection.find().sort({ [sortField]: sortOrder }).toArray();
+        res.json({
+            success: true,
+            data: products
+        });
+    } catch (err) {
+        res.json({ 
+            success: false,
+            error: err.message 
+        });
+    }
+});
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
