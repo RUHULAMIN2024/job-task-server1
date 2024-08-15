@@ -29,7 +29,20 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
 
-
+app.get('/products', async(req, res) => {
+    try {
+        const products = await productsCollection.find().toArray();
+        res.json({
+            success: true,
+            data: products
+        });
+    } catch (error) {
+        res.json({
+            success: false,
+            error: error.message
+        });
+    }
+})
     
 
         // Send a ping to confirm a successful connection
