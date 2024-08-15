@@ -77,6 +77,33 @@ async function run() {
         });
 
 
+
+// Filter products by category, brand, and price range
+app.get("/filter", async (req, res) => {
+    try {
+        const { category, brand, minPrice, maxPrice } = req.query;
+        let filter = {};
+
+        if (category) filter.category = category;
+        if (brand) filter.brand = brand;
+        if (minPrice) filter.price = { $gte: parseFloat(minPrice) };
+        if (maxPrice) filter.price = { ...filter.price, $lte: parseFloat(maxPrice) };
+
+        const products = await productsCollection.find(filter).toArray();
+        res.json({
+            success: true,
+            data: products
+    });
+    } catch (err) {
+        res.json({ 
+            success: false,
+            error: err.message 
+        });
+    }
+});
+
+
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
