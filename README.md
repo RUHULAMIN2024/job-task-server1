@@ -24,8 +24,8 @@ This is the backend part of the Pagination built with React.js.
 
 1. Clone the repository:
    ```bash
-   git clone 
-   cd product-management-frontend
+   git clone https://github.com/RUHULAMIN2024/job-task-server1
+   cd job-task-server1
 
 
 2. Install the dependencies:
@@ -34,8 +34,8 @@ This is the backend part of the Pagination built with React.js.
 
 3. Set up MongoDB:
 
-Create a MongoDB database.
-Create a .env file in the root of the project with the mongodb credentials
+- Create a MongoDB database.
+- Create a .env file in the root of the project with the mongodb credentials
 
 4. Run the project:
     ```bash
