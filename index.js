@@ -48,8 +48,6 @@ async function run() {
                 if (search) {
                     filter.$or = [
                         { name: { $regex: search, $options: 'i' } },
-                        
-                        // Add more fields for searching as needed
                     ];
                 }
 
