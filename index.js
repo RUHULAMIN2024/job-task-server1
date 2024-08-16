@@ -36,28 +36,31 @@ async function run() {
             try {
                 const page = parseInt(req.query.page);
                 const size = parseInt(req.query.size);
+                const search = req.query.search || '';
+
                 const { category, brand, minPrice, maxPrice } = JSON.parse(req.query.filter);
                 const sort = JSON.parse(req.query.sort);
 
 
-                const search = req.query.search || '';
 
                 let filter = {};
 
                 if (search) {
                     filter.$or = [
                         { name: { $regex: search, $options: 'i' } },
-                        { description: { $regex: search, $options: 'i' } },
+                        
                         // Add more fields for searching as needed
                     ];
                 }
 
                 if (category) filter.category = category;
+                if (category) filter.category = category;
                 if (brand) filter.brand = brand;
                 if (minPrice) filter.price = { $gte: parseFloat(minPrice) };
                 if (maxPrice) filter.price = { ...filter.price, $lte: parseFloat(maxPrice) };
 
-                const sortField = sort?.sortField || 'creationDate';
+                console.log(filter);
+                const sortField = sort?.sortField || 'createdAt';
                 const sortOrder = sort?.sortOrder === 'asc' ? 1 : -1;
 
                 
